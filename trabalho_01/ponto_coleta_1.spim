@@ -25,7 +25,7 @@ main:
 	syscall
   move $s1, $v0 # Salva o segundo input do usuario em $s1
 	slti $t1, $s1, 255  # Condicional, retorna True se $t0 < 255 e False se $t0 > 255
-	beq $t2, $t1, exit_error #Se t1 for False, sai do programa
+	beq $t2, $t1, exit_error #Se t2 for False, sai do programa
 	
 	# Realização das operacoes
   jal add_func # ADD
