@@ -1,0 +1,26 @@
+.data
+	quebra_linha:.asciiz "\n"
+
+
+.text
+	main:
+		li $v0, 5 #lendo valor 1
+		syscall
+		
+		move $s0, $v0 #valor 1 em s0
+		
+		li $v0, 5 #lendo valor 2
+		syscall
+		
+		move $s1, $v0 #valor 2 em s1
+		
+		sub $t0, $s0, $s1 #subtraindo (s0 - s1, nesta ordem)
+		
+		li $v0, 1
+		move $a0, $t0
+		syscall
+		
+		la $a0, quebra_linha
+		li $v0, 4
+		syscall
+		
