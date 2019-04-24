@@ -215,3 +215,43 @@ BEQ $s0, $s1, L2              # desvia para L2 se x = y
 ADD $s2, $s3, $s4             # Executa se x <> y
 L2 : SUB $s2, $s3, $s4        # Executa se x = y
 ```
+
+* **Conversão da instrução de Linguagem de Montagem para Linguagem de Máquina**
+
+|End|opcode|rs|rt|rd|shamt|funct|
+|--|--|--|--|--|--|--|
+10000|5|$16|$17|L1|
+10004|0|$18|$19|$20|0|32|
+10008|0|$18|$19|$20|0|34|
+
+Para **NOT EQUAL** usar BNE
+
+**Em C** => ``if (x != y) go to L2;``
+
+**Em MIPS** => `BNE $s0, $s1, L2`
+
+# Comparação menor que - Tipo R
+
+Compara se um número é menor que outro
+
+**Em C** => 
+```
+if ( i < j )
+      a = b + c;
+else
+      a = b – c;
+```
+
+**Em MIPS** => Considere a = $s0, b = $s1, c = $s2, i = $s3, j = $s4.
+```
+SLT $t0, $s3, $s4
+BNE $t0, $zero, else
+ADD $s0, $s1, $s2
+j exit  
+
+else:
+  SUB $s0, $s1, $s2
+
+exit:
+
+```
