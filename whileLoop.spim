@@ -1,0 +1,49 @@
+.data
+	space: .asciiz ", "
+.text
+	main:
+		addi $t0, $zero, 0 # (em C: int i = 0)
+
+		
+		
+		while:
+			bgt $t0, 10, exit  #quebra do loop, vá para exit se o laço se for igual a 10
+			
+			jal print_number
+			
+			
+			addi $t0, $t0, 1 # (C: i + 1 ou i++)
+						
+			j while  # voltar para o while
+
+		exit:
+		
+			li $v0, 10 # sair do programa
+			syscall
+			
+			
+			
+		print_number:
+			li $v0, 1
+			add $a0, $zero, $t0
+			syscall
+			
+			addi $t1, $zero, 10
+			
+			bne $t0, $t1 print_space
+			
+			jr $ra
+			
+		print_space:
+			li $v0, 4
+			la $a0, space
+			syscall
+			
+			jr $ra
+			
+			
+
+		
+			
+			
+			
