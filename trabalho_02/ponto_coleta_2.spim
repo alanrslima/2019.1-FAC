@@ -1,0 +1,30 @@
+.data
+
+  jump_line: .asciiz "\n"
+  error: .asciiz "\nentrada incorreta"
+
+.text
+
+main:
+  # Leitura de input
+	li $v0,5 # Leitura de um valor inteiro de input
+	syscall
+ 	move $s0, $v0 # Salva o primeiro input do usuario em $s0
+	slti $t1, $s0, 128  # Condicional, retorna True se $t0 < 128 e False se $t0 > 128
+	beq $t2, $t1, exit_error #Se t2 for False, sai do programa
+
+
+exit:
+	la $a0, jump_line
+	li $v0, 4 #Chamada de sistema para print de string
+	syscall
+	li $v0, 10 # Saida
+	syscall	
+	
+
+exit_error:
+	li $v0, 4 # Chamada de sistema para print de string
+	la $a0, error # Printa na tela a mensagem de erro
+	syscall
+	li $v0, 10 # Saida
+	syscall
