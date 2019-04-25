@@ -1,0 +1,68 @@
+.data
+
+
+.text
+
+main:
+  
+  # Suponha $s0=a, $s1=b, $s2=c, $s3=d, $s4=e, $s5
+
+  # a = b + c[10]
+  LW $t0, 10($s2)   # $t0 = memória [ $s2 + 10 ]
+  ADD $s0, $s1, $t0 # $s0 = $s1 + $t0
+
+  # a = b[15] - c
+  LW $t0, 15($s1)
+  SUB $s0, $t0, $s2
+
+  # b = a[5] + c[3]
+  LW $t0, 5($s0)
+  LW $t1, 3($s2)
+  ADD $s1, $t0, $t1
+
+  # c = b - a[21]
+  LW $t0, 21($s0)
+  SUB $s2, $s1, $t0
+
+  # a[15] = b + c
+  ADD $t0, $s1, $s2
+  SW $t0, 15($s0)
+
+  # b[245] = a + c;
+  ADD $t0, $s0, $s1
+  SW $t0, 245($s1)
+
+  # a[22] = b[1] - c
+  LW $t0, 1($s1)
+  SUB $t0, $t0, $s2
+  SW $t0, 22($s1)
+
+  # a [ 34 ] = b [ 3 ] + c - d
+  LW $t0, 3($s1)
+  ADD $t0, $t0, $s2
+  SUB $t0, $t0, $s3
+  SW, $t0, 34($s0)
+
+  # a [ 45 ] = b - c + d [ 67 ]
+  LW $t0, 67($s3)
+  SUB $t1, $s1, $s2
+  ADD $t0, $t1, $t0
+  SW $t0, 45($s0)
+
+  # a [ 79 ] = b - c [18 ] + d
+  LW $t0, 18($s2)   # V1 = c[18]
+  SUB $t0, $s1, $t0 # V2 = b - v1
+  ADD $t0, $t0, $s3 # V3 = V2 + d
+  SW $t0, 79($s0)   # a[79] = V3
+
+  # a [ 82 ] = b [ 2 ] - c [ 4 ]
+  LW $t0, 4($s2)    # V1 = c[4]
+  LW $t1, 2($s1)    # V2 = b[2]
+  SUB $t0, $t1, $t0 # V3 = V2 - v1
+  SW $t0, 82($s0)
+
+  
+
+
+
+  

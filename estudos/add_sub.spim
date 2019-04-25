@@ -1,47 +1,50 @@
 .data
 
-  jump_line: .asciiz "\n\n"
-  
+
 .text
 
 main:
+  
+  # Suponha $s0=a, $s1=b, $s2=c, $s3=d, $s4=e, $s5
 
-  li $v0,5 
-	syscall
- 	move $s0, $v0  # a = $s0 
+  # a = b - ( c - d ) + e
+  SUB $t0, $s2, $s3 # V1 = c-d
+  SUB $t0, $s1, $t0 # V2 = b - V1
+  ADD $s0, $t0, $s4 # a = V2 + e
 
-  li $v0,5
-	syscall
- 	move $s1, $v0 # b = $s1
+  # a = b - c 
+  SUB $s0, $s1, $s2
 
-  li $v0,5 
-	syscall
- 	move $s2, $v0 # c = $s2
+  # b = a + c
+  ADD $s1, $s0, $s2
 
-  li $v0,5 
-	syscall
- 	move $s3, $v0 # d = $s3
+  # d = (a + b - c)
+  ADD $t0, $s0, $s1 # V1 = a+b
+  SUB $s3, $t0, $s2 # d = V1 - c
 
-  li $v0,5 
-	syscall
- 	move $s4, $v0 # e = $s4
+  # f = (a + b) - d
+  ADD $t0, $s0, $s1 # V1 = a+b
+  SUB $s5, $t0, $s3 # f = V1 - d
 
-  li $v0,5 
-	syscall
- 	move $s5, $v0 # f = $s5
+  # c = a - (b + d)
+  ADD $t0, $s1, $s3 # V1 = b + d
+  SUB $s2, $s0, $t0 # c = a - v1
 
-  # a = b - c;
-  sub $s0, $s1, $s2
-  li $v0, 1 #Chamada de sistema para print de valor
-	move $a0, $s0
-	syscall
+  # e = ( a - ( b - c )
+  SUB $t0, $s1, $s2 # v1 = b-c
+  SUB $s4, $s0, $t0 # e = a-V1
 
-  # b
+  # e = ( a - ( b - c ) + f )
+  SUB $t0, $s1, $s2 # V1 = b-c
+  SUB $t0, $s0, $t0 # v2 = a-v1
+  ADD $s4, $t0, $s5 # e = V2+f
+
+  # f = e - (a - b ) + ( b - c )
+  SUB $t0, $s0, $s1 # V1 = a-b
+  SUB $t1, $s1, $s2 # v2 = b-c
+  SUB $t0, $s4, $t0 # V3 = e-V1
+  ADD $s5, $t0, $t1 # f = V3+V2
 
 
-  la $a0, jump_line
-	li $v0, 4 #Chamada de sistema para print de string
-	syscall
 
   
-
