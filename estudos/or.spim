@@ -1,0 +1,44 @@
+.data
+
+  i:   .word 324
+  ii:  .word 100
+  iii: .word 2018
+  iv:  .word 1970
+  v:   .word 33
+  vi:  .word 66
+  jump_line: .asciiz "\n"
+
+.text
+
+main:
+
+  lw $s0, i
+  lw $s1, ii
+  jal or_func
+
+  lw $s0, iii
+  lw $s1, iv
+  jal or_func
+
+  lw $s0, v
+  lw $s1, vi
+  jal or_func
+
+  j exit
+
+
+or_func:
+  or $t0, $s0, $s1
+  li $v0, 1
+  move $a0, $t0
+  syscall
+  li $v0, 4
+  la $a0, jump_line
+  syscall
+  jr $ra
+
+
+exit:
+  li $v0, 10 # saida
+  syscall
+

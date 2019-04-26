@@ -1,0 +1,70 @@
+.data
+
+  i:   .word 10
+  ii:  .word 25
+  iii: .word 43
+  iv:  .word 89
+  direita: .asciiz "Deslocamento para direita\n"
+  esquerda: .asciiz "Deslocamento para esquerda\n"
+  jump_line: .asciiz "\n"
+
+.text
+
+main:
+  # DESLOCAMENTO PARA DIREITA
+  la $a0, direita
+	li $v0, 4 #Chamada de sistema para print de string
+	syscall
+
+  lw $t0, i
+  srl $t0, $t0, 8
+  jal printResult
+  
+  lw $t0, ii
+  srl $t0, $t0, 8  
+  jal printResult
+
+  lw $t0, iii
+  srl $t0, $t0, 8  
+  jal printResult
+
+  lw $t0, iv
+  srl $t0, $t0, 8  
+  jal printResult
+
+  # DESLOCAMENTO PARA ESQUERDA
+  la $a0, esquerda
+	li $v0, 4 #Chamada de sistema para print de string
+	syscall
+
+  lw $t0, i
+  sll $t0, $t0, 4
+  jal printResult
+
+  lw $t0, ii
+  sll $t0, $t0, 4  
+  jal printResult
+
+  lw $t0, iii
+  sll $t0, $t0, 4  
+  jal printResult
+
+  lw $t0, iv
+  sll $t0, $t0, 4  
+  jal printResult
+
+  j exit
+
+printResult:
+  li $v0, 1
+  move $a0, $t0 
+  syscall
+  li $v0, 4 #Chamada de sistema para print de string
+  la $a0, jump_line
+	syscall
+  jr $ra
+
+
+exit:
+	li $v0, 10 # Saida
+	syscall	

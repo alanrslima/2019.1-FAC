@@ -44,12 +44,18 @@
 |6 bits|5 bits|5 bits|5 bits|5 bits|6 bits|
 |opcode ou código da operação|registrador do primeiro operando fonte|registrador do segundo operando fonte|registrador do operando destino	|deslocamento|função de operação ou código de função|
 
-## Formato de Instrução do Tipo l
+## Formato de Instrução do Tipo I
 ### Tabela 3
 |opcode|rs|rt|endereço|
 |--|--|--|--|
 |6 bits|5 bits|5 bits|16 bits|
 |código de operação|registrador destino|registrador fonte|endereço de memória|
+
+## Formato de Instrução do Tipo J
+### Tabela 3
+|opcode|endereço|
+|--|--|
+|6 bits|26 bits|
 
 ## Opcodes
 ### Tabela 4

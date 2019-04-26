@@ -1,0 +1,23 @@
+.data
+
+  i:   .word 15360
+  ii:  .word 1970
+  iii: .word 66
+
+.text
+
+
+main:
+  lw $s0, i
+  nor $t0, $s0, $zero
+  li $v0, 1
+  move $a0, $t0
+  syscall
+
+  j exit
+
+
+exit:
+  li $v0, 10 # saida
+  syscall
+

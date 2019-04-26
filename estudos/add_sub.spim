@@ -8,42 +8,42 @@ main:
   # Suponha $s0=a, $s1=b, $s2=c, $s3=d, $s4=e, $s5
 
   # a = b - ( c - d ) + e
-  SUB $t0, $s2, $s3 # V1 = c-d
-  SUB $t0, $s1, $t0 # V2 = b - V1
-  ADD $s0, $t0, $s4 # a = V2 + e
+  sub $t0, $s2, $s3 # V1 = c-d
+  sub $t0, $s1, $t0 # V2 = b - V1
+  add $s0, $t0, $s4 # a = V2 + e
 
   # a = b - c 
-  SUB $s0, $s1, $s2
+  sub $s0, $s1, $s2
 
   # b = a + c
-  ADD $s1, $s0, $s2
+  add $s1, $s0, $s2
 
   # d = (a + b - c)
-  ADD $t0, $s0, $s1 # V1 = a+b
-  SUB $s3, $t0, $s2 # d = V1 - c
+  add $t0, $s0, $s1 # V1 = a+b
+  sub $s3, $t0, $s2 # d = V1 - c
 
   # f = (a + b) - d
-  ADD $t0, $s0, $s1 # V1 = a+b
-  SUB $s5, $t0, $s3 # f = V1 - d
+  add $t0, $s0, $s1 # V1 = a+b
+  sub $s5, $t0, $s3 # f = V1 - d
 
   # c = a - (b + d)
-  ADD $t0, $s1, $s3 # V1 = b + d
-  SUB $s2, $s0, $t0 # c = a - v1
+  add $t0, $s1, $s3 # V1 = b + d
+  sub $s2, $s0, $t0 # c = a - v1
 
   # e = ( a - ( b - c )
-  SUB $t0, $s1, $s2 # v1 = b-c
-  SUB $s4, $s0, $t0 # e = a-V1
+  sub $t0, $s1, $s2 # v1 = b-c
+  sub $s4, $s0, $t0 # e = a-V1
 
   # e = ( a - ( b - c ) + f )
-  SUB $t0, $s1, $s2 # V1 = b-c
-  SUB $t0, $s0, $t0 # v2 = a-v1
-  ADD $s4, $t0, $s5 # e = V2+f
+  sub $t0, $s1, $s2 # V1 = b-c
+  sub $t0, $s0, $t0 # v2 = a-v1
+  add $s4, $t0, $s5 # e = V2+f
 
   # f = e - (a - b ) + ( b - c )
-  SUB $t0, $s0, $s1 # V1 = a-b
-  SUB $t1, $s1, $s2 # v2 = b-c
-  SUB $t0, $s4, $t0 # V3 = e-V1
-  ADD $s5, $t0, $t1 # f = V3+V2
+  sub $t0, $s0, $s1 # V1 = a-b
+  sub $t1, $s1, $s2 # v2 = b-c
+  sub $t0, $s4, $t0 # V3 = e-V1
+  add $s5, $t0, $t1 # f = V3+V2
 
 
 

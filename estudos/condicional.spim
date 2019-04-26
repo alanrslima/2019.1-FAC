@@ -1,0 +1,116 @@
+.data
+
+.text
+
+main:
+  # Suponha x = $s0, y = $s1, a = $s2, b = $s3, c = $s4
+
+  # if ( x == y ) go to L2;
+  # a = b + c;
+  # L2 : a = b - c;
+  beq $s0, $s1, L2  # desvia para L2 se x = y
+  add $s2, $s3, $s4 # Executa se x <> y
+  L2: sub $s2, $s3, $s4 # Executa se x = y
+
+  # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  # if ( x == y) go to L2
+  # a[1] = b - c;
+  # b = a[2] + c;
+  # c = b + c[3];
+  # L2: a[4] = a[6] + a[5]
+  beq $s0, $s1, L2  # Se x==y vai para L2
+  sub $t0, $s3, $s4 # V1 = b-c
+  sw $t0, 1($s2)    # a[1] = V1
+  
+  lw $t0, 2($s2)    # V2 = a[2]
+  add $s3, $t0, $s4 # b = V2 + c
+  
+  lw $t0, 3($s4)    # V3 = c[3]
+  add $s4, $s3, $t0 # c = b + V3
+
+  L2: 
+    lw $t0, 6($s2)   # V1 = a[6]
+    lw $t1, 5($s2)   # V2 = a[5]
+    add $t0, $t0, $1 # V3 = V1 + V2
+    sw $t0, 4($s2)   # a[4] = V3
+
+  # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  # if( x == y )
+  #     a = b + c; //resposta verdadeira
+  # else
+  #     a = b – c; //resposta falsa
+  bne $s0, $s1, ELSE # Desvia para ELSE se x <> y
+  add $s2, $s3, $s4  # a = b + c
+  j EXIT
+  ELSE: SUB $s2, $s3, $s4
+  EXIT:
+
+  # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  # if ( a == b )
+  #   c = a + b;
+  #   a = b - c;
+  # else
+  #   b = a + c;
+  #   c = b - c;
+  bne $s2, $s3, ELSE
+  add $s4, $s2, $s3
+  sub $s2, $s3, $s4
+  j EXIT
+  ELSE: 
+    add $s3, $s2, $s4
+    sub $s4, $s3, $s4
+  EXIT:
+
+  # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  #   if ( a != b )
+  #    c = a - b;
+  #    a = b + c;
+  # else
+  #    b = a - c;
+  #    c = b + c;
+  bne $s2, $s3, THEN
+  sub $s3, $s2, $s4
+  add $s4, $s3, $s4
+  j EXIT
+  THEN:
+    sub $s3, $s2, $s4
+    add $s4, $s3, $s4
+  EXIT:
+
+  # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  # if ( x < y )
+  #   a = b + c;
+  # else
+  #   a = b – c;
+  slt $t0, $s0, $s1
+  bne $t0, $zero, ELSE
+  add $s2, $s3, $s4
+  j EXIT
+  ELSE: sub $s2, $s3, $s4
+  EXIT:
+
+  # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  
+  # if ( a > b )
+  #    c = a - b;
+  #    a = b + c;
+  # else
+  #    b = a - c;
+  #    c = b + c;
+  slt $t0, $s2, $s3
+  bne $t0, $zero, ELSE
+  sub $s4, $s2, $s3
+  add $s2, $s3, $s4
+  j EXIT
+  ELSE:
+    sub $s3, $s2, $s4
+    add $s4, $s3, $s4
+  EXIT:
+
+
+

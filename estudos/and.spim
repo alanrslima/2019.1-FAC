@@ -1,0 +1,46 @@
+.data
+
+  i:   .word 324
+  ii:  .word 100
+  iii: .word 2018
+  iv:  .word 1970
+  v:   .word 33
+  vi:  .word 66
+  jump_line: .asciiz "\n"
+
+.text
+
+main:
+
+  # 324 AND 100
+  lw $s0, i   # load word i no registrador $s0
+  lw $s1, ii  # load word ii no rehistrador $21
+  jal and_func
+
+  # 2018 AND 1970
+  lw $s0, iii
+  lw $s1, iv
+  jal and_func
+
+  # 33 AND 66
+  lw $s0, v
+  lw $s1, vi
+  jal and_func
+
+  j exit
+
+
+and_func:
+  and $t0, $s0, $s1 # And bit a bit com $s0, $s1 e salva resultado em $t0
+  li $v0, 1 # Chamada de sistema para print de inteiro
+  move $a0, $t0 
+  syscall
+  li $v0, 4
+  la $a0, jump_line
+  syscall
+  jr $ra
+
+exit:
+  li $v0, 10 # Saida
+	syscall	
+

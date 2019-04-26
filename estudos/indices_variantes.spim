@@ -1,0 +1,26 @@
+.data
+
+
+.text
+
+main:
+  # g = h + a[i]
+  # Suponha g = $s0, h = $s1, a = $s2, i = $s3
+
+  # METODO 1
+  add $t0, $s3, $s3 # 2*i
+  add $t0, $t0, $t0 # 4*i
+  add $t0, $s2, $t0 # (4*i + $s2) = a[i]
+  lw $t0, 0($t0)    # Load word a[i] em $t0
+  add $s0, $s1, $t0 # g = h + a[i]
+
+  # METODO 2
+  sll $t0, $s3, 2   # 4*i
+  add $t0, $s2, $t0 # (4*i + $s2) = a[i]
+  lw $t0, 0($t0)    # Load word a[i] em $t0
+  add $s0, $s1, $t0 # g = h + a[i]
+
+  j exit
+
+exit:
+  li $v0, 10  # saida
