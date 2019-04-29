@@ -1,0 +1,57 @@
+# Definindo a Jump Table
+.data
+  jTable: .word L0,L1,L2,L3    
+  bye: .asciiz "Saindo, tchau" 
+ 
+.text
+
+main:
+ 
+  li $v0, 5
+  # move $s5, $v0
+  syscall
+
+# Definindo as variáveis
+li  $s1, 15                               # g = $s1 = 15
+li  $s2, 20                               # h = $s2 = 20
+li  $s3, 10                               # i = $s3 = 10
+li  $s4, 5                                # j = $s4 = 5
+# li  $s5, 3                               # k = $s5 = 2
+la  $t4, jTable                           # $t4 = base address of the jump table
+ 
+# Verificando os limites de K
+slt  $t3, $v0, $zero                 
+bne  $t3, $zero, EXIT            
+slti $t3, $v0, 4            
+beq  $t3, $zero, EXIT
+ 
+# Calculando o endereço correto do Label
+sll $t1, $v0, 2                         
+add $t1, $t1, $t4                    
+lw  $t0, 0($t1)           
+ 
+# Seleção do Label    
+jr $t0                          
+ 
+# Casos          
+L0:      
+  add $s0, $s3, $s4
+  j print_value                              
+L1:      
+  add $s0, $s1, $s2 
+  j print_value                                   
+L2:      
+  sub $s0, $s1, $s2
+  j print_value
+L3:      
+  sub $s0, $s3, $s4  
+  j print_value
+
+print_value:
+  li $v0, 1      
+  move $a0, $s0
+  syscall
+  j EXIT
+
+EXIT:
+#FIM

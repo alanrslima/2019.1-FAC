@@ -1,0 +1,86 @@
+.data
+	error: 		 .asciiz "entrada incorreta\n"
+	jump_line: .asciiz "\n"
+	bit: 			 .asciiz "bit-paridade: "
+	saida: 		 .asciiz "\nsaida: "
+
+.text
+	main:
+		li $v0, 5 # Leitura de um input de inteiro
+		syscall		# Chamada de sistema
+		move $s0, $v0 # Guardando input em $s0
+
+		# Validações
+		slti $t0, $s0, 128  			   # Condicional, retorna 1 se $s0 < 128 e 0 se $s0 > 128
+		beq $t0, $zero, exit_error   # Se $t0 for 0, sai do programa
+		slti $t0, $s0, 0 						 # Condicional, retorna 1 se $s0 < 0 e 0 se $s0 > 0
+		bne $t0, $zero, exit_error   # Se $t0 for 0, sai do programa
+		
+		li $s2, 0		# $s2 = 0, este irá registrar a quantidade de bits 1 
+		li $t0, 0 	# $t0 = 0, registrador utilizado como condicao de parada do loop while
+		li $t1, 25  # $t1 = 25, registrador para auxiliar a leitura de cada bit no loop while 
+		li $t2, 31 	# $t2 = 31, registrador para auxiliar a leitura de cada bit no loop while
+		
+	while:
+		bgt $t0, 6, exit  # Condição de parada, o loop sera percorrido 7 vezes, pois o maior número aceito contém 7 bits
+			
+		sllv $t3, $s0, $t1 # Shift de $t1 para esquerda
+		srlv $t4, $t3, $t2 # Shift de $t2 para direita
+		# Os dois comandos acima isolam um bit de cada vez do input que contém no máximo 7 bits
+		# Portanto em $t4 será armazenado o numero 0, ou 1 
+
+		bne $t4, $zero, soma  # Se o bit atual for igual a 1, incrementa o registrador equivalente a soma ($s2)		
+		addi $t0, $t0, 1  # Incrementa condicao de parada do loop
+		addi $t1, $t1, 1 # Incrementa o registrador auxiliar para conseguir pegar o segundo bit, ate o ultimo bit do input
+		j while	# Executa while novamente
+		
+	soma:
+		addi $s2, $s2, 1 # Incrementa registrador que soma a quantidade de bits 1
+		addi $t0, $t0, 1 # Incrementa condicao de parada do loop
+		addi $t1, $t1, 1 # Incrementa o registrador auxiliar para conseguir pegar o segundo bit, ate o ultimo bit do input
+		j while
+		
+	exit:
+		# Apos percorrer todos os bits do numero de input, a quantidade de bits 1 esta guardada no registrador $s2
+		sll $t5, $s2, 31  # Shift de 31 pra esquerda
+		srl $t6, $t5, 31 	# Shift de 31 pra direita
+		# Os dois comandos acima isolam o bit menos significativo do numero guardado por $s2 e guarda em $t6
+		# Caso este bit seja 1, signfica que o numero e impar, caso seja 0, par
+
+		li $v0, 4		# Print de string
+		la $a0, bit # Print string "bit-paridade: "
+		syscall			# Chamada de sistema
+			
+		li $v0, 1			 # Print de inteiro
+		move $a0, $t6  # Resultado paridade
+		syscall				 # Chamada de sistema
+
+		beq $t6, $zero, imprimir_par # Caso $t6 seja 0, vai para condicao de input com bit de paridade 0
+
+		addi $s0, $s0, 128 # Se a paridade for 1(impar) acrescenta 128 ao valor original do input 
+		# Desta forma, o bit 1 é adicionado bit mais significativo do numero de entrada 
+
+
+	imprimir_par:
+		li $v0, 4			# Print de string
+		la $a0, saida # Print a string "saida: "
+		syscall				# Chamada de sistema
+
+		li $v0, 1			# Print de inteiro
+		move $a0, $s0 # Resultado de saida
+		syscall				# Chamada de sistema
+
+		li $v0, 4					# Print de string
+		la $a0, jump_line # Printa quebra de linha
+		syscall						# Chamada de sistema
+
+		li $v0, 10 		# Saida
+		syscall				# Chamada de sistema
+
+		
+	exit_error: 
+		li $v0, 4 		# Chamada de sistema para print de string
+		la $a0, error # Printa na tela a mensagem de erro
+		syscall				# Chamada de sistema
+		li $v0, 10 		# Saida
+		syscall				# Chamada de sistema

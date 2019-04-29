@@ -1,65 +1,30 @@
 .data
 
+  c: .word 3, 0, 1, 2, -6, -2, 4, 10, 3, 7, 8, -9, -15, -20, -87, 0  # int c[15] = {3,0,1,2 ...}
 
 .text
 
 main:
+  # Objetivo: Gerar codigo mips de a = b + c[10]
+  # Onde b = 30; a = 0;
+
+  li $s0, 30  # (Load immeadiate) Carrega o valor 30 em $s0 (b)
+  la $s1, c      # (Load address) Carrega posição do array em $s1 (c)
+  li $t0, 10  # (Load immediate) Carrega o valor de indice [10] em $t0
+  add $t1, $t0, $t0 # (10 + 10 = 20)
+  add $t1, $t1, $t1 # (20 + 20 = 40)
+  # sll $t1, $t0, 2 # (4 * $t0 = 4 * 10 = 40) >>> Esta linha pode substituir as duas linhas acima <<<
+  add $t1, $t1, $s1 # 40 + $s1 = c[10]
+  lw $t1, 0($t1)    # Carrega valor de c[10] em $t1
+  add $s3, $t1, $s0 # Soma valor de $t1+$s0 => (c[10] + b)
+
+  li $v0, 1
+  move $a0, $s3
+  syscall
+
+  li $v0, 10 # saida
+  syscall
   
-  # Suponha $s0=a, $s1=b, $s2=c, $s3=d, $s4=e, $s5
-
-  # a = b + c[10]
-  lw $t0, 10($s2)   # $t0 = memória [ $s2 + 10 ]
-  add $s0, $s1, $t0 # $s0 = $s1 + $t0
-
-  # a = b[15] - c
-  lw $t0, 15($s1)
-  sub $s0, $t0, $s2
-
-  # b = a[5] + c[3]
-  lw $t0, 5($s0)
-  lw $t1, 3($s2)
-  add $s1, $t0, $t1
-
-  # c = b - a[21]
-  lw $t0, 21($s0)
-  sub $s2, $s1, $t0
-
-  # a[15] = b + c
-  add $t0, $s1, $s2
-  sw $t0, 15($s0)
-
-  # b[245] = a + c;
-  add $t0, $s0, $s1
-  sw $t0, 245($s1)
-
-  # a[22] = b[1] - c
-  lw $t0, 1($s1)
-  sub $t0, $t0, $s2
-  sw $t0, 22($s1)
-
-  # a [ 34 ] = b [ 3 ] + c - d
-  lw $t0, 3($s1)
-  add $t0, $t0, $s2
-  sub $t0, $t0, $s3
-  sw, $t0, 34($s0)
-
-  # a [ 45 ] = b - c + d [ 67 ]
-  lw $t0, 67($s3)
-  sub $t1, $s1, $s2
-  add $t0, $t1, $t0
-  sw $t0, 45($s0)
-
-  # a [ 79 ] = b - c [18 ] + d
-  lw $t0, 18($s2)   # V1 = c[18]
-  sub $t0, $s1, $t0 # V2 = b - v1
-  add $t0, $t0, $s3 # V3 = V2 + d
-  sw $t0, 79($s0)   # a[79] = V3
-
-  # a [ 82 ] = b [ 2 ] - c [ 4 ]
-  lw $t0, 4($s2)    # V1 = c[4]
-  lw $t1, 2($s1)    # V2 = b[2]
-  sub $t0, $t1, $t0 # V3 = V2 - v1
-  sw $t0, 82($s0)
 
   
 

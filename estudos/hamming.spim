@@ -1,0 +1,40 @@
+
+.text
+
+main:
+
+    li $v0, 5
+    syscall
+
+    lui $t5, 0x0101 #$t5 is 0x01010101
+    ori $t5, 0x0101
+    lui $t6, 0x5555 #$t6 is 0x55555555
+    ori $t6, 0x5555
+    lui $t7, 0x3333 #$t7 is 0x33333333
+    ori $t7, 0x3333
+    lui $t8, 0x0f0f #$t8 is 0x0f0f0f0f
+    ori $t8, 0x0f0f
+
+    # x -= (x>>1) & 0x55555555
+    srl $t0 $v0 1
+    and $t0 $t0 $t6
+    sub $v0 $v0 $t0
+
+    # x = (x & 0x33333333) + ((x >> 2) & 0x33333333)
+    and $t0 $v0 $t7
+    srl $t1 $v0 2
+    and $t1 $t1 $t7
+    add $v0 $t0 $t1
+
+    # x = (x + (x >> 4)) & 0x33333333
+    srl $t0 $v0 4
+    add $t0 $v0 $t0
+    and $v0 $t0 $t8
+
+    # output (x * 0x01010101) >> 24
+    mul $v0 $v0 $t5
+    srl $a0 $v0 24
+    li $v0 1
+    syscall
+
+    jr $ra
