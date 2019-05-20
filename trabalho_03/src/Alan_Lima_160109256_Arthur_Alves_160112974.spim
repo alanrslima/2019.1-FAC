@@ -1,0 +1,70 @@
+.data
+    quebra: .asciiz "\n"  # representa a quebra de linha
+    log_error: .asciiz "Entrada invalida.\n"  # representa o log de entrada incorreta
+.text
+
+    main:
+        li $v0, 5   # lendo o input do usuário
+        syscall  # chamada de sistema
+
+        move $s0, $v0  # movendo o input do usuário para o registrador s0
+        
+        ble $s0, 1, exit_error # se o input (s0) for menor ou igual a 1, a função exit error é chamada.
+        bgt $s0, 32767, exit_error # se o input (s0) for maior que 32767, a função exit error é chamada.
+
+        li $s1, 2  # salvando o numero 2 no registrador s1. 2 é o numero que vamos iniciar com a fatoração. input / 2.
+        addi $s2, $s0, 0  # adicionando o valor do input (s0) ao registrador s2.
+
+        while:  # inicio do loop
+            beq $s1, $s0, exit  # se o numero contido em s0 for igual o numero da fatoração ($s1), a função exit é chamada. ( se forem iguais, sabemos que foi o ultimo dividendo possivel)
+            div $s2, $s2, $s1   # dividindo $s2(dividendo) por $s1 (divisor) e armazenando em $s2.
+            mfhi $s3            # movendo o resto da divisão de ($s2 por $s1) para o registrador s3.
+
+            beq $s3, $zero, printa  # se o resto ($s3) for igual a 0 ($zero), a função printa é chamada.
+            
+            # se o resto nao for zero
+
+            addi $s1, $s1, 1 # adicionando 1 ao dividendo ($s1).
+            addi $s2, $s0, 0  # devolve o valor inicial do registrador $s2 o mesmo ao inicio da iteração. pois a divisão teve resto e o valor de s2 fica incorreto. o valor do inicio da iteração fica salvo em $s0.
+
+        j while  # volta pro loop
+    
+
+    printa:
+
+    li $v0, 1 # chamada para print de inteiro.
+    move $a0, $s1 # movendo o divisor ($s1) para o registrador de saida (a0).
+    syscall # chamada de sistema.
+
+    li $v0, 4  # chamada para print de string.
+    la $a0, quebra # carregando a label quebra em a0.
+    syscall  # chamada de sistema.
+
+    addi $s0, $s2, 0 # adicionando o valor atual de $s2 ( resultado da divisao ) em $s0
+
+
+
+    j while # voltando para o loop do inicio sem incrementar no divisor ($s1), pois o proximo numero pode ser divisivel pelo mesmo divisor.
+
+    exit:
+    # ao entrar nessa função, sabemos que o input chegou no ultimo divisor possivel, então so basta printar mais uma vez o divisor ($s1)
+
+    li $v0, 1  # chamada para print de inteiro
+    move $a0, $s1 # movendo o divisor ($s1) para o registrador de saída (a0).
+    syscall # chamada de sistema
+
+    li $v0, 4  # chamada para print de string.
+    la $a0, quebra # carregando a label quebra em a0.
+    syscall # chamada de sistema.
+
+    li $v0, 10  # chamada para finalizar o programa
+    syscall # chamada de sistema.
+
+    exit_error:  # funcao para erro de input
+
+        li $v0, 4  # chamada para print de string
+        la $a0, log_error # carregando a label log_error em a0.
+        syscall # chamada de sistema
+
+        li $v0, 10  # chamada para finalizar o programa
+        syscall # chamada de sistema.
